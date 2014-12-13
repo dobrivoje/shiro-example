@@ -14,45 +14,44 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
 
 @Theme("shiroexample")
-public class ExampleUI extends UI implements ViewChangeListener {
+public class ExampleUI extends UI {
 
-	@WebServlet(value = "/*")
-	@VaadinServletConfiguration(productionMode = false, ui = ExampleUI.class)
-	public static class Servlet extends VaadinServlet {
-	}
+    @WebServlet(value = "/*")
+    @VaadinServletConfiguration(productionMode = false, ui = ExampleUI.class)
+    public static class Servlet extends VaadinServlet {
+    }
 
-	@Override
-	protected void init(VaadinRequest request) {
-		Navigator navigator = new Navigator(this, this);
-		navigator.addViewChangeListener(this);
+    @Override
+    protected void init(VaadinRequest request) {
+        Navigator navigator = new Navigator(this, this);
+        navigator.addViewChangeListener(new ViewChangeListener() {
+            
+            @Override
+            public boolean beforeViewChange(ViewChangeEvent event) {
+                Subject currentUser = SecurityUtils.getSubject();
 
-		navigator.addView("", LoginView.class);
-		if (SecurityUtils.getSubject().isAuthenticated()) {
-			getUI().getNavigator().addView("secure", SecureView.class);
-		}
-		navigator.setErrorView(ErrorView.class);
-	}
+                if (currentUser.isAuthenticated() && event.getViewName().equals(LoginView.ID)) {
+                    event.getNavigator().navigateTo(SecureView.ID);
+                    return false;
+                }
 
-	@Override
-	public boolean beforeViewChange(ViewChangeEvent event) {
-		Subject currentUser = SecurityUtils.getSubject();
-		if (currentUser.isAuthenticated() && event.getViewName().equals("")) {
-			event.getNavigator().navigateTo("secure");
-			return false;
-		}
+                if (!currentUser.isAuthenticated() && !event.getViewName().equals(LoginView.ID)) {
+                    event.getNavigator().navigateTo(LoginView.ID);
+                    return false;
+                }
 
-		if (!currentUser.isAuthenticated() && !event.getViewName().equals("")) {
-			event.getNavigator().navigateTo("");
-			return false;
-		}
+                return true;
+            }
 
-		return true;
-	}
+            @Override
+            public void afterViewChange(ViewChangeEvent event) {
+            }
+        });
 
-	@Override
-	public void afterViewChange(ViewChangeEvent event) {
-		// TODO Auto-generated method stub
-
-	}
-
+        navigator.addView(LoginView.ID, LoginView.class);
+        if (SecurityUtils.getSubject().isAuthenticated()) {
+            getUI().getNavigator().addView(SecureView.ID, SecureView.class);
+        }
+        navigator.setErrorView(ErrorView.class);
+    }
 }

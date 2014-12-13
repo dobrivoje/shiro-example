@@ -17,47 +17,45 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 
 public class LoginView extends FormLayout implements View, ClickListener {
 
-	private TextField username = new TextField("Username");
-	private PasswordField password = new PasswordField("Password");
-	private Button loginBtn = new Button("Login", this);
-	private Label invalidPassword = new Label("Invalid username or password");
+    public static final String ID = "LoginView";
+    private final LoginLayout loginWindow = new LoginLayout();
 
-	public LoginView() {
-		username.focus();
-		addComponent(username);
-		addComponent(password);
-		addComponent(loginBtn);
-		addComponent(invalidPassword);
-		invalidPassword.setVisible(false);
-	}
+    private final TextField usernameTxtField = new TextField("Username");
+    private final PasswordField passwordTxtField = new PasswordField("Password");
+    private final Button loginBtn = new Button("Login", this);
+    private final Label invalidPasswordLabel = new Label("Invalid username or password");
 
-	@Override
-	public void enter(ViewChangeEvent event) {
-		// TODO Auto-generated method stub
+    public LoginView() {
+        usernameTxtField.focus();
+        loginWindow.addComponents(usernameTxtField, passwordTxtField, loginBtn, invalidPasswordLabel);
+        invalidPasswordLabel.setVisible(false);
+    }
 
-	}
+    @Override
+    public void enter(ViewChangeEvent event) {
+    }
 
-	@Override
-	public void buttonClick(ClickEvent event) {
-		Subject currentUser = SecurityUtils.getSubject();
-		UsernamePasswordToken token = new UsernamePasswordToken(
-				username.getValue(), password.getValue());
-		try {
-			currentUser.login(token);
-			getUI().getNavigator().addView("secure", SecureView.class);
-			getUI().getNavigator().navigateTo("secure");
-			VaadinService
-					.reinitializeSession(VaadinService.getCurrentRequest());
-		} catch (Exception e) {
-			Logger.getAnonymousLogger().log(Level.INFO, e.getMessage());
-			username.setValue("");
-			password.setValue("");
-			invalidPassword.setVisible(true);
-		}
-
-	}
-
+    @Override
+    public void buttonClick(ClickEvent event) {
+        Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordToken token = new UsernamePasswordToken(
+                usernameTxtField.getValue(), passwordTxtField.getValue());
+        try {
+            subject.login(token);
+            UI.getCurrent().removeWindow(loginWindow.getWindow());
+            
+            getUI().getNavigator().addView(SecureView.ID, SecureView.class);
+            getUI().getNavigator().navigateTo(SecureView.ID);
+            VaadinService.reinitializeSession(VaadinService.getCurrentRequest());
+        } catch (Exception e) {
+            Logger.getAnonymousLogger().log(Level.INFO, e.getMessage());
+            usernameTxtField.setValue("");
+            passwordTxtField.setValue("");
+            invalidPasswordLabel.setVisible(true);
+        }
+    }
 }
