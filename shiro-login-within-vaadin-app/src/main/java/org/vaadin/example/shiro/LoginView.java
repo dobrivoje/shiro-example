@@ -34,7 +34,7 @@ public class LoginView extends FormLayout implements View, ClickListener {
         loginWindow.addComponents(usernameTxtField, passwordTxtField, loginBtn, invalidPasswordLabel);
         invalidPasswordLabel.setVisible(false);
     }
-
+    
     @Override
     public void enter(ViewChangeEvent event) {
     }

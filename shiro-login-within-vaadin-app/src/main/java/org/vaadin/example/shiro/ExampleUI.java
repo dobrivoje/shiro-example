@@ -16,6 +16,11 @@ import com.vaadin.ui.UI;
 @Theme("shiroexample")
 public class ExampleUI extends UI {
 
+    private static final String PERMISSION1 = "stampac_print_pdf";
+    private static final String PERMISSION2 = "stampa:xerox5225a";
+
+    private final Navigator navigator = new Navigator(this, this);
+
     @WebServlet(value = "/*")
     @VaadinServletConfiguration(productionMode = false, ui = ExampleUI.class)
     public static class Servlet extends VaadinServlet {
@@ -23,19 +28,29 @@ public class ExampleUI extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        Navigator navigator = new Navigator(this, this);
+        navigator.addView(LoginView.ID, LoginView.class);
+        navigator.addView(LogoutView.ID, LogoutView.class);
+        
+        navigator.setErrorView(ErrorView.class);
+
+        if (SecurityUtils.getSubject().isPermitted(PERMISSION1)) {
+            getUI().getNavigator().addView(SecureView.ID, SecureView.class);
+        }
+
         navigator.addViewChangeListener(new ViewChangeListener() {
-            
+
             @Override
-            public boolean beforeViewChange(ViewChangeEvent event) {
+            public boolean beforeViewChange(ViewChangeListener.ViewChangeEvent event) {
                 Subject currentUser = SecurityUtils.getSubject();
 
-                if (currentUser.isAuthenticated() && event.getViewName().equals(LoginView.ID)) {
+                if (currentUser.isPermitted(PERMISSION1)
+                        && event.getViewName().equals(LoginView.ID)) {
                     event.getNavigator().navigateTo(SecureView.ID);
                     return false;
                 }
 
-                if (!currentUser.isAuthenticated() && !event.getViewName().equals(LoginView.ID)) {
+                if (!currentUser.hasRole(PERMISSION1)
+                        && !event.getViewName().equals(LoginView.ID)) {
                     event.getNavigator().navigateTo(LoginView.ID);
                     return false;
                 }
@@ -44,14 +59,8 @@ public class ExampleUI extends UI {
             }
 
             @Override
-            public void afterViewChange(ViewChangeEvent event) {
+            public void afterViewChange(ViewChangeListener.ViewChangeEvent event) {
             }
         });
-
-        navigator.addView(LoginView.ID, LoginView.class);
-        if (SecurityUtils.getSubject().isAuthenticated()) {
-            getUI().getNavigator().addView(SecureView.ID, SecureView.class);
-        }
-        navigator.setErrorView(ErrorView.class);
     }
 }
