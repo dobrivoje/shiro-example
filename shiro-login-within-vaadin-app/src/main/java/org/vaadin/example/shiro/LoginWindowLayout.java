@@ -13,14 +13,14 @@ import com.vaadin.ui.Window;
  *
  * @author root
  */
-public class LoginLayout extends VerticalLayout {
+public class LoginWindowLayout extends VerticalLayout {
 
     private final Window window;
 
     private final float WINDOW_WIDTH_PERCENT = 33;
     private final float WINDOW_HEIGHT_PERCENT = 40;
 
-    public LoginLayout() {
+    public LoginWindowLayout() {
         setMargin(true);
         setSpacing(true);
         

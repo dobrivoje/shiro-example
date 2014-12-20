@@ -2,9 +2,6 @@ package org.vaadin.example.shiro;
 
 import javax.servlet.annotation.WebServlet;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
-
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
@@ -12,14 +9,14 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 
 @Theme("shiroexample")
 public class ExampleUI extends UI {
 
-    private static final String PERMISSION1 = "stampac_print_pdf";
-    private static final String PERMISSION2 = "stampa:xerox5225a";
-
-    private final Navigator navigator = new Navigator(this, this);
+    private static final String ROLE1 = "stampac_print_pdf";
+    private static final String ROLE2 = "stampa:xerox5225a";
 
     @WebServlet(value = "/*")
     @VaadinServletConfiguration(productionMode = false, ui = ExampleUI.class)
@@ -28,13 +25,14 @@ public class ExampleUI extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        navigator.addView(LoginView.ID, LoginView.class);
-        navigator.addView(LogoutView.ID, LogoutView.class);
-        
+        Navigator navigator = new Navigator(this, this);
+        navigator.addView(LoginView.class.getSimpleName(), LoginView.class);
+        navigator.addView(LogoutView.class.getSimpleName(), LogoutView.class);
+        navigator.addView(NoRightsView.class.getSimpleName(), NoRightsView.class);
         navigator.setErrorView(ErrorView.class);
 
-        if (SecurityUtils.getSubject().isPermitted(PERMISSION1)) {
-            getUI().getNavigator().addView(SecureView.ID, SecureView.class);
+        if (SecurityUtils.getSubject().hasRole(ROLE1)) {
+            UI.getCurrent().getNavigator().addView(SecureView.class.getSimpleName(), SecureView.class);
         }
 
         navigator.addViewChangeListener(new ViewChangeListener() {
@@ -43,15 +41,15 @@ public class ExampleUI extends UI {
             public boolean beforeViewChange(ViewChangeListener.ViewChangeEvent event) {
                 Subject currentUser = SecurityUtils.getSubject();
 
-                if (currentUser.isPermitted(PERMISSION1)
-                        && event.getViewName().equals(LoginView.ID)) {
-                    event.getNavigator().navigateTo(SecureView.ID);
+                if (currentUser.hasRole(ROLE1)
+                        && event.getViewName().equals(LoginView.class.getSimpleName())) {
+                    event.getNavigator().navigateTo(SecureView.class.getSimpleName());
                     return false;
                 }
 
-                if (!currentUser.hasRole(PERMISSION1)
-                        && !event.getViewName().equals(LoginView.ID)) {
-                    event.getNavigator().navigateTo(LoginView.ID);
+                if (!currentUser.hasRole(ROLE1)
+                        && !event.getViewName().equals(LoginView.class.getSimpleName())) {
+                    event.getNavigator().navigateTo(LoginView.class.getSimpleName());
                     return false;
                 }
 
@@ -63,4 +61,5 @@ public class ExampleUI extends UI {
             }
         });
     }
+
 }

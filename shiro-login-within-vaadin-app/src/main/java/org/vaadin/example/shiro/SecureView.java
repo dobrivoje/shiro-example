@@ -13,12 +13,13 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 
 public class SecureView extends VerticalLayout implements View {
 
-    public static final String ID = "SecureView";
+    private static final String PERMISSION1 = "xerox5225:print:pdf";
+    private static final String PERMISSION2 = "xerox5225:print:xml";
+
     private boolean initialized = false;
 
     private Button dugmence;
@@ -28,14 +29,8 @@ public class SecureView extends VerticalLayout implements View {
 
         System.err.println("sess:" + subject.getSession().toString());
         System.err.println("principal:" + subject.getPrincipal().toString());
-        System.err.println("role 1 :" + subject.hasRole("admin"));
-
-        try {
-            subject.checkPermission("xerox5225:print:pdf");
-            System.err.println("permission pdf : yes");
-        } catch (AuthorizationException ae) {
-            System.err.println("greška !" + ae.toString());
-        }
+        System.err.println("perm 1 :" + subject.isPermitted(PERMISSION1));
+        System.err.println("perm 2 :" + subject.isPermitted(PERMISSION2));
 
         Logger.getLogger(getClass().getCanonicalName()).log(Level.INFO,
                 "Initializing secure view");
@@ -51,18 +46,35 @@ public class SecureView extends VerticalLayout implements View {
         dugmence = new Button("Logout", new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                SecurityUtils.getSubject().logout();
-                UI.getCurrent().getNavigator().navigateTo(LogoutView.ID);
+                logout();
             }
         });
         addComponent(dugmence);
     }
 
+    private void logout() {
+        Logger.getLogger(getClass().getCanonicalName()).log(Level.INFO, "LOGOUT !");
+        UI.getCurrent().getNavigator().navigateTo(LogoutView.class.getSimpleName());
+
+        initialized = false;
+    }
+
+    private void noRights() {
+        Logger.getLogger(getClass().getCanonicalName()).log(Level.INFO, "NO RIGHTS !");
+        UI.getCurrent().getNavigator().navigateTo(NoRightsView.class.getSimpleName());
+
+        initialized = false;
+    }
+
     @Override
     public void enter(ViewChangeEvent event) {
-        if (!initialized) {
-            build();
-            initialized = true;
+        if (SecurityUtils.getSubject().isPermitted(PERMISSION2)) {
+            if (!initialized) {
+                build();
+                initialized = true;
+            }
+        } else {
+            noRights();
         }
     }
 }

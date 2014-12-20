@@ -21,20 +21,19 @@ import com.vaadin.ui.UI;
 
 public class LoginView extends FormLayout implements View, ClickListener {
 
-    public static final String ID = "LoginView";
-    private final LoginLayout loginWindow = new LoginLayout();
+    private final LoginWindowLayout loginWindowLayout = new LoginWindowLayout();
 
     private final TextField usernameTxtField = new TextField("Username");
     private final PasswordField passwordTxtField = new PasswordField("Password");
     private final Button loginBtn = new Button("Login", this);
-    private final Label invalidPasswordLabel = new Label("Invalid username or password");
+    private final Label loginMessage = new Label("Invalid username or password");
 
     public LoginView() {
         usernameTxtField.focus();
-        loginWindow.addComponents(usernameTxtField, passwordTxtField, loginBtn, invalidPasswordLabel);
-        invalidPasswordLabel.setVisible(false);
+        loginWindowLayout.addComponents(usernameTxtField, passwordTxtField, loginBtn, loginMessage);
+        loginMessage.setVisible(false);
     }
-    
+
     @Override
     public void enter(ViewChangeEvent event) {
     }
@@ -46,16 +45,17 @@ public class LoginView extends FormLayout implements View, ClickListener {
                 usernameTxtField.getValue(), passwordTxtField.getValue());
         try {
             subject.login(token);
-            UI.getCurrent().removeWindow(loginWindow.getWindow());
-            
-            getUI().getNavigator().addView(SecureView.ID, SecureView.class);
-            getUI().getNavigator().navigateTo(SecureView.ID);
-            VaadinService.reinitializeSession(VaadinService.getCurrentRequest());
+            UI.getCurrent().removeWindow(loginWindowLayout.getWindow());
+
+            getUI().getNavigator().addView(SecureView.class.getSimpleName(), SecureView.class);
+            getUI().getNavigator().navigateTo(SecureView.class.getSimpleName());
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(Level.INFO, e.getMessage());
             usernameTxtField.setValue("");
             passwordTxtField.setValue("");
-            invalidPasswordLabel.setVisible(true);
+            loginMessage.setVisible(true);
+
+            VaadinService.reinitializeSession(VaadinService.getCurrentRequest());
         }
     }
 }
