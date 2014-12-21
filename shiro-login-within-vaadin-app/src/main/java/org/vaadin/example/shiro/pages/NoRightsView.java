@@ -1,4 +1,4 @@
-package org.vaadin.example.shiro;
+package org.vaadin.example.shiro.pages;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -9,11 +9,12 @@ import com.vaadin.ui.VerticalLayout;
 import org.apache.shiro.SecurityUtils;
 
 public class NoRightsView extends VerticalLayout implements View {
+
     public NoRightsView() {
-        
+        setMargin(true);
+        setSpacing(true);
+
         addComponent(new Label("You don't have necessary rights."));
-        addComponent(new Label(""));
-        //addComponent(new Label("Apps: " + app.getName() + ", desc: " + app.getDescription()));
         addComponent(new Label(""));
         addComponent(new Button("Login Page", new Button.ClickListener() {
             @Override
