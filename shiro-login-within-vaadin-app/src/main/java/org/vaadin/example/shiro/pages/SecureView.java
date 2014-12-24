@@ -1,5 +1,6 @@
 package org.vaadin.example.shiro.pages;
 
+import com.vaadin.navigator.ViewChangeListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -8,14 +9,16 @@ import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.themes.Reindeer;
+import org.apache.shiro.SecurityUtils;
 import org.vaadin.example.shiro.functionalities.SecureAccessView;
+import org.vaadin.example.shiro.functionalities.SecurityDefs;
 
 public class SecureView extends SecureAccessView {
 
-    private Button logOutButton;
+    private Button logoutButton;
 
     @Override
-    protected void login() {
+    protected void createView() {
         Logger.getLogger(getClass().getCanonicalName()).log(Level.INFO, "Initializing secure view");
         Label label = new Label("Super secret documentation of your project");
         label.setStyleName(Reindeer.BUTTON_DEFAULT);
@@ -26,13 +29,30 @@ public class SecureView extends SecureAccessView {
         embedded.setHeight(600, Unit.PIXELS);
         addComponent(embedded);
 
-        logOutButton = new Button("Logout", new Button.ClickListener() {
+        logoutButton = new Button("Logout", new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
                 logout(LogoutView.class.getSimpleName());
             }
         });
 
-        addComponent(logOutButton);
+        addComponent(logoutButton);
+    }
+
+    @Override
+    public void enter(ViewChangeListener.ViewChangeEvent event) {
+        if (isPermitted(SecurityDefs.PERMISSION1)) {
+            if (!initialized) {
+                createView();
+                initialized = true;
+            }
+        } else {
+            noRights(NoRightsView.class.getSimpleName());
+        }
+    }
+
+    @Override
+    protected boolean isPermitted(String permission) {
+        return SecurityUtils.getSubject().isPermitted(permission);
     }
 }

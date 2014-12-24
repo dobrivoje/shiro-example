@@ -18,10 +18,6 @@ public class ErrorView extends VerticalLayout implements View {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                if (!UI.getCurrent().getWindows().isEmpty()) {
-                    UI.getCurrent().getWindows().clear();
-                }
-
                 UI.getCurrent().getNavigator().navigateTo(LoginView.class.getSimpleName());
             }
         }));

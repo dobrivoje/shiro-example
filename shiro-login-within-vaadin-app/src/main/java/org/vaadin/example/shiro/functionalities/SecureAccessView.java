@@ -6,14 +6,12 @@
 package org.vaadin.example.shiro.functionalities;
 
 import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.vaadin.example.shiro.pages.NoRightsView;
 
 /**
  *
@@ -29,12 +27,15 @@ public abstract class SecureAccessView extends VerticalLayout implements View {
         setSpacing(true);
     }
 
-    protected abstract void login();
+    protected abstract void createView();
+
+    protected abstract boolean isPermitted(String permission);
 
     protected void logout(String page) {
         Logger.getLogger(getClass().getCanonicalName()).log(Level.INFO, "LOGOUT !");
-        UI.getCurrent().getNavigator().navigateTo(page);
 
+        SecurityUtils.getSubject().logout();
+        UI.getCurrent().getNavigator().navigateTo(page);
         initialized = false;
     }
 
@@ -43,17 +44,5 @@ public abstract class SecureAccessView extends VerticalLayout implements View {
         UI.getCurrent().getNavigator().navigateTo(page);
 
         initialized = false;
-    }
-
-    @Override
-    public void enter(ViewChangeListener.ViewChangeEvent event) {
-        if (SecurityUtils.getSubject().isPermitted(SecurityDefs.PERMISSION2)) {
-            if (!initialized) {
-                login();
-                initialized = true;
-            }
-        } else {
-            noRights(NoRightsView.class.getSimpleName());
-        }
     }
 }

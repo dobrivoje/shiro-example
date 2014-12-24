@@ -2,7 +2,6 @@ package org.vaadin.example.shiro.pages;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
@@ -19,8 +18,6 @@ public class LogoutView extends VerticalLayout implements View {
             @Override
             public void buttonClick(Button.ClickEvent event) {
                 SecurityUtils.getSubject().logout();
-                VaadinService.reinitializeSession(VaadinService.getCurrentRequest());
-                
                 UI.getCurrent().getNavigator().navigateTo(LoginView.class.getSimpleName());
             }
         }));

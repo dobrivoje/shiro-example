@@ -75,6 +75,10 @@ public class LoginWindow extends Window implements ClickListener {
     public void setLoginMessageVisible(boolean visible) {
         loginMessage.setVisible(visible);
     }
+
+    public void setUsernameFocus() {
+        usernameTxtField.focus();
+    }
     //</editor-fold>
 
     @Override
