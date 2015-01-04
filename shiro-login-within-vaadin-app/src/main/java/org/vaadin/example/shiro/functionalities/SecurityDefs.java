@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author dobri
  */
-public class SecurityDefs implements Serializable {
+public final class SecurityDefs implements Serializable {
 
     public static final String ROLE1 = "stampac_print_pdf";
     public static final String ROLE2 = "stampac_print_all";

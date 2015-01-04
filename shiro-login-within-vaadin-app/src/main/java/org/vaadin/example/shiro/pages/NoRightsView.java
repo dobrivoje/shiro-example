@@ -2,8 +2,10 @@ package org.vaadin.example.shiro.pages;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.Page;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import org.apache.shiro.SecurityUtils;
@@ -27,5 +29,11 @@ public class NoRightsView extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeEvent event) {
+        Page page = event.getNavigator().getUI().getPage();
+        
+        String fragment = page.getUriFragment();
+        String query = page.getLocation().getHost();
+
+        Notification.show("Fragment: " + fragment + " ,query: ");
     }
 }

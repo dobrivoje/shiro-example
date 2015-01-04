@@ -31,9 +31,9 @@ public class MainUI extends UI {
     protected void init(VaadinRequest request) {
         Navigator navigator = new Navigator(this, this);
 
-        navigator.addView(LoginView.class.getSimpleName(), LoginView.class);
+        navigator.addView(LoginView.class.getSimpleName(), new LoginView());
         navigator.addView(LogoutView.class.getSimpleName(), LogoutView.class);
-        navigator.addView(SecureView.class.getSimpleName(), SecureView.class);
+        navigator.addView(SecureView.class.getSimpleName(), new SecureView());
         navigator.addView(NoRightsView.class.getSimpleName(), NoRightsView.class);
         navigator.setErrorView(ErrorView.class);
 
