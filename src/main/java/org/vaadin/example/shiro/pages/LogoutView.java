@@ -18,7 +18,7 @@ public class LogoutView extends VerticalLayout implements View {
             @Override
             public void buttonClick(Button.ClickEvent event) {
                 SecurityUtils.getSubject().logout();
-                UI.getCurrent().getNavigator().navigateTo(LoginView.class.getSimpleName());
+                getUI().getNavigator().navigateTo(LoginView.class.getSimpleName());
             }
         }));
     }

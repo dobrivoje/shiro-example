@@ -42,7 +42,7 @@ public class LoginView extends VerticalLayout implements View, ClickListener {
         try {
             subject.login(token);
             UI.getCurrent().removeWindow(loginWindow);
-            UI.getCurrent().getNavigator().navigateTo(SecureView.class.getSimpleName());
+            getUI().getNavigator().navigateTo(SecureView.class.getSimpleName());
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(Level.INFO, e.getMessage());
             loginWindow.setUsername("");
@@ -50,7 +50,7 @@ public class LoginView extends VerticalLayout implements View, ClickListener {
             loginWindow.setLoginMessageVisible(true);
             loginWindow.setUsernameFocus();
             
-            UI.getCurrent().getNavigator().navigateTo(NoRightsView.class.getSimpleName());
+            getUI().getNavigator().navigateTo(NoRightsView.class.getSimpleName());
         }
     }
 }

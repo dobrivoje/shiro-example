@@ -1,0 +1,16 @@
+org\vaadin\example\shiro\pages\NoRightsView$1.class
+org\vaadin\example\shiro\MainUI$1.class
+org\vaadin\example\shiro\pages\LogoutView.class
+org\vaadin\example\shiro\pages\ErrorView.class
+org\vaadin\example\shiro\functionalities\LoginWindow.class
+org\vaadin\example\shiro\pages\SecureView$1.class
+org\vaadin\example\shiro\functionalities\SecurityDefs.class
+org\vaadin\example\shiro\MainUI.class
+org\vaadin\example\shiro\MainUI$Servlet.class
+org\vaadin\example\shiro\pages\ErrorView$1.class
+org\vaadin\example\shiro\pages\SecureView.class
+org\vaadin\example\shiro\pages\LogoutView$1.class
+org\vaadin\example\shiro\functionalities\SecureAccessView.class
+org\vaadin\example\shiro\pages\LoginView.class
+org\vaadin\example\shiro\pages\ErrorView$2.class
+org\vaadin\example\shiro\pages\NoRightsView.class

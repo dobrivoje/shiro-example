@@ -1,0 +1,5 @@
+org\vaadin\example\shiro\SecureView.class
+org\vaadin\example\shiro\ExampleUI$MyJspServlet.class
+org\vaadin\example\shiro\ExampleUI$Servlet.class
+org\vaadin\example\shiro\ErrorView.class
+org\vaadin\example\shiro\ExampleUI.class

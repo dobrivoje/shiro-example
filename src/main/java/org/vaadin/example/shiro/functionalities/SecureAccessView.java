@@ -8,7 +8,6 @@ package org.vaadin.example.shiro.functionalities;
 import com.vaadin.navigator.View;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,18 +36,17 @@ public abstract class SecureAccessView extends VerticalLayout implements View {
         Logger.getLogger(getClass().getCanonicalName()).log(Level.INFO, "LOGOUT !");
 
         SecurityUtils.getSubject().logout();
-        
+
         Page.getCurrent().reload();
         VaadinSession.getCurrent().getSession().invalidate();
-        UI.getCurrent().getNavigator().navigateTo(page);
-        
-        
+        getUI().getNavigator().navigateTo(page);
+
         initialized = false;
     }
 
     protected void noRights(String page) {
         Logger.getLogger(getClass().getCanonicalName()).log(Level.INFO, "NO RIGHTS !");
-        UI.getCurrent().getNavigator().navigateTo(page);
+        getUI().getNavigator().navigateTo(page);
 
         initialized = false;
     }

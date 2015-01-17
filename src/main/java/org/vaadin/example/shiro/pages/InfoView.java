@@ -18,7 +18,7 @@ public class InfoView extends VerticalLayout implements View {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                UI.getCurrent().getNavigator().navigateTo(SecureView.class.getSimpleName());
+                getUI().getNavigator().navigateTo(SecureView.class.getSimpleName());
             }
         }));
     }
