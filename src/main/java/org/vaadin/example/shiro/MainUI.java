@@ -5,7 +5,6 @@ import org.vaadin.example.shiro.pages.NoRightsView;
 import org.vaadin.example.shiro.pages.LoginView;
 import org.vaadin.example.shiro.pages.ErrorView;
 import org.vaadin.example.shiro.pages.SecureView;
-import org.vaadin.example.shiro.functionalities.SecurityDefs;
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
@@ -18,6 +17,7 @@ import com.vaadin.ui.UI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.shiro.SecurityUtils;
+import org.vaadin.example.shiro.functionalities.SecurityDefs_New;
 import org.vaadin.example.shiro.pages.InfoView;
 
 @Theme("shiroexample")
@@ -43,14 +43,14 @@ public class MainUI extends UI {
             @Override
             public boolean beforeViewChange(ViewChangeListener.ViewChangeEvent event) {
                 if (event.getViewName().equals(LoginView.class.getSimpleName())
-                        && SecurityUtils.getSubject().hasRole(SecurityDefs.ROLE1)) {
+                        && SecurityUtils.getSubject().hasRole(SecurityDefs_New.ROLE1.getRole())) {
                     
                     event.getNavigator().navigateTo(InfoView.class.getSimpleName());
                     return false;
                 }
 
                 if (!event.getViewName().equals(LoginView.class.getSimpleName())
-                        && !SecurityUtils.getSubject().hasRole(SecurityDefs.ROLE1)) {
+                        && !SecurityUtils.getSubject().hasRole(SecurityDefs_New.ROLE1.getRole())) {
                     
                     event.getNavigator().navigateTo(LoginView.class.getSimpleName());
                     return false;
